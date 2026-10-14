@@ -61,6 +61,7 @@ export function NetworkView({ s }: { s: SimState }) {
               ) : (
                 <rect x="-7" y="-7" width="14" height="14" transform="rotate(45)" fill="var(--marker)" stroke="var(--foreground)" strokeWidth="1" />
               )}
+            </g>
           );
         });
       })}
