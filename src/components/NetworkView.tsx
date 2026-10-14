@@ -6,7 +6,7 @@ export function NetworkView({ s }: { s: SimState }) {
   const pos: Record<string, { x: number; y: number }> = {};
   s.procs.forEach((p, i) => {
     const a = (i / s.procs.length) * Math.PI * 2 - Math.PI / 2;
-    pos[p.id] = { x: W / 2 + R * Math.cos(a) * 1.35, y: H / 2 + R * Math.sin(a) };
+    pos[p.id] = { x: Math.round(W / 2 + R * Math.cos(a) * 1.35), y: Math.round(H / 2 + R * Math.sin(a)) };
   });
 
   const geom = (k: string) => {
@@ -42,7 +42,7 @@ export function NetworkView({ s }: { s: SimState }) {
               strokeDasharray={r?.recording ? "6 4" : undefined}
               className={r?.recording ? "anim-dash" : undefined}
               markerEnd={`url(#arr-${color === "transit" ? "app" : color})`}>
-              <title>{k}{r?.recording ? " (recording)" : r?.done ? " (recorded)" : ""}</title>
+              <title>{`${k}${r?.recording ? " (recording)" : r?.done ? " (recorded)" : ""}`}</title>
             </line>
           </g>
         );
