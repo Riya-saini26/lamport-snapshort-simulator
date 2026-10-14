@@ -114,7 +114,7 @@ function checkComplete(s: SimState) {
 }
 
 export function isFinished(s: SimState) {
-  return s.cursor >= s.script.length && s.links.every((l) => s.channels[l].length === 0);
+  return s.cursor >= s.script.length && s.links.every((l) => (s.channels[l]?.length ?? 0) === 0);
 }
 
 /** Deterministic choice of the next event. */

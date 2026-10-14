@@ -99,8 +99,8 @@ function Simulator() {
                     <dt>Local state</dt><dd className="text-right font-mono text-foreground">{p.balance}</dd>
                     <dt>Events</dt><dd className="text-right font-mono">{p.events}</dd>
                     <dt>Sent / received</dt><dd className="text-right font-mono">{p.sent} / {p.recv}</dd>
-                    <dt>Incoming queued</dt><dd className="text-right font-mono">{inc.reduce((t, l) => t + s.channels[l].length, 0)}</dd>
-                    <dt>Outgoing queued</dt><dd className="text-right font-mono">{out.reduce((t, l) => t + s.channels[l].length, 0)}</dd>
+                    <dt>Incoming queued</dt><dd className="text-right font-mono">{inc.reduce((t, l) => t + (s.channels[l]?.length ?? 0), 0)}</dd>
+                    <dt>Outgoing queued</dt><dd className="text-right font-mono">{out.reduce((t, l) => t + (s.channels[l]?.length ?? 0), 0)}</dd>
                   </dl>
                 </div>
               );
@@ -188,10 +188,10 @@ function Simulator() {
             <div className="border-t border-border pt-3">
               <div className="mb-2 text-sm">Deliver a specific channel</div>
               <div className="flex flex-wrap gap-1">
-                {s.links.filter((l) => s.channels[l].length).map((l) => (
-                  <button key={l} className="btn px-2 py-1 font-mono text-xs" disabled={playing} onClick={() => sim.act({ type: "deliver", ch: l })}>{l} ({s.channels[l].length})</button>
+                {s.links.filter((l) => (s.channels[l]?.length ?? 0)).map((l) => (
+                  <button key={l} className="btn px-2 py-1 font-mono text-xs" disabled={playing} onClick={() => sim.act({ type: "deliver", ch: l })}>{l} ({(s.channels[l]?.length ?? 0)})</button>
                 ))}
-                {s.links.every((l) => !s.channels[l].length) && <span className="text-xs text-muted-foreground">All channels empty.</span>}
+                {s.links.every((l) => !(s.channels[l]?.length ?? 0)) && <span className="text-xs text-muted-foreground">All channels empty.</span>}
               </div>
               {!s.started && <button className="btn mt-3 w-full text-xs" disabled={playing || !!cfgErr} onClick={() => sim.act({ type: "snapshot", by: sim.initiator })}>Initiate snapshot now from {sim.initiator}</button>}
             </div>

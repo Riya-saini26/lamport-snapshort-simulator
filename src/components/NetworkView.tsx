@@ -49,7 +49,7 @@ export function NetworkView({ s }: { s: SimState }) {
       })}
       {s.links.flatMap((k) => {
         const g = geom(k);
-        return s.channels[k].map((m, i) => {
+        return (s.channels[k] ?? []).map((m, i) => {
           const t = Math.max(0.15, 0.78 - i * 0.14);
           const x = g.sx + (g.ex - g.sx) * t, y = g.sy + (g.ey - g.sy) * t;
           return (
