@@ -11,7 +11,7 @@ export function NetworkView({ s }: { s: SimState }) {
 
   const geom = (k: string) => {
     const [a, b] = chEnds(k);
-    const A = pos[a], B = pos[b];
+    const A = pos[a]!, B = pos[b]!;
     const dx = B.x - A.x, dy = B.y - A.y, len = Math.hypot(dx, dy);
     const ux = dx / len, uy = dy / len, nx = -uy * 9, ny = ux * 9;
     const sx = A.x + ux * NODE + nx, sy = A.y + uy * NODE + ny;
@@ -68,7 +68,7 @@ export function NetworkView({ s }: { s: SimState }) {
         });
       })}
       {s.procs.map((p) => {
-        const { x, y } = pos[p.id];
+        const { x, y } = pos[p.id]!;
         const rec = p.recorded !== null;
         return (
           <g key={p.id} transform={`translate(${x},${y})`}>
