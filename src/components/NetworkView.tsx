@@ -42,7 +42,6 @@ export function NetworkView({ s }: { s: SimState }) {
               strokeDasharray={r?.recording ? "6 4" : undefined}
               className={r?.recording ? "anim-dash" : undefined}
               markerEnd={`url(#arr-${color === "transit" ? "app" : color})`}>
-              <title>{`${k}${r?.recording ? " (recording)" : r?.done ? " (recorded)" : ""}`}</title>
             </line>
           </g>
         );
@@ -62,8 +61,6 @@ export function NetworkView({ s }: { s: SimState }) {
               ) : (
                 <rect x="-7" y="-7" width="14" height="14" transform="rotate(45)" fill="var(--marker)" stroke="var(--foreground)" strokeWidth="1" />
               )}
-              <title>{m.kind === "app" ? `Message ${m.amount} on ${k}` : `Marker on ${k}`}</title>
-            </g>
           );
         });
       })}
