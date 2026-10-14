@@ -96,7 +96,7 @@ function recordLocal(s: SimState, id: string) {
   for (const l of s.links) {
     const [from, to] = chEnds(l);
     if (from === id) {
-      s.channels[l].push({ id: s.nextId++, kind: "marker", amount: 0 });
+      s.channels[l]!.push({ id: s.nextId++, kind: "marker", amount: 0 });
       log(s, id, "Send marker", `${id} sends a marker to ${to} before any further messages on ${l}.`, "marker");
     }
   }
@@ -119,11 +119,11 @@ export function isFinished(s: SimState) {
 
 /** Deterministic choice of the next event. */
 export function nextAction(s: SimState): Action | null {
-  if (s.cursor < s.script.length) return s.script[s.cursor];
+  if (s.cursor < s.script.length) return s.script[s.cursor]!;
   let best: string | null = null;
   let bestId = Infinity;
   for (const l of s.links) {
-    const h = s.channels[l][0];
+    const h = s.channels[l]?.[0];
     if (h && h.id < bestId) { bestId = h.id; best = l; }
   }
   return best ? { type: "deliver", ch: best } : null;
@@ -146,7 +146,7 @@ export function apply(prev: SimState, a: Action, fromScript = false): SimState {
     const p = proc(s, a.from);
     if (p.balance < a.amount) throw new Error(`${a.from} only has ${p.balance}.`);
     p.balance -= a.amount; p.sent++; p.events++;
-    s.channels[k].push({ id: s.nextId++, kind: "app", amount: a.amount });
+    s.channels[k]!.push({ id: s.nextId++, kind: "app", amount: a.amount });
     s.line = -1; s.lastCh = k;
     log(s, a.from, "Send message", `${a.from} sends ${a.amount} to ${a.to}. Its balance drops to ${p.balance}.`, "app");
   } else if (a.type === "snapshot") {
@@ -154,7 +154,7 @@ export function apply(prev: SimState, a: Action, fromScript = false): SimState {
     proc(s, a.by);
     s.started = true; s.initiator = a.by; s.line = 0;
     log(s, a.by, "Initiate", `${a.by} initiates the snapshot.`, "info");
-    s.links.forEach((l) => { const q = s.channels[l].filter((m) => m.kind === "app"); if (q.length) s.inTransitAtSnapshot[l] = q.map((m) => m.amount); });
+    s.links.forEach((l) => { const q = (s.channels[l] ?? []).filter((m) => m.kind === "app"); if (q.length) s.inTransitAtSnapshot[l] = q.map((m) => m.amount); });
     recordLocal(s, a.by);
     s.line = 1;
   } else {
@@ -166,7 +166,7 @@ export function apply(prev: SimState, a: Action, fromScript = false): SimState {
     s.lastCh = a.ch;
     if (m.kind === "app") {
       p.balance += m.amount; p.recv++; p.events++;
-      const r = s.rec[a.ch];
+      const r = s.rec[a.ch]!;
       if (r?.recording) {
         r.msgs.push(m.amount); s.line = 5;
         log(s, to, "Receive message", `${to} receives ${m.amount} from ${from}. It was in transit, so it is added to the state of ${a.ch}.`, "record");
@@ -183,7 +183,7 @@ export function apply(prev: SimState, a: Action, fromScript = false): SimState {
         log(s, to, "Record channel", `${to} records channel ${a.ch} as empty.`, "record");
         s.line = 3;
       } else {
-        const r = s.rec[a.ch];
+        const r = s.rec[a.ch]!;
         r.recording = false; r.done = true;
         log(s, to, "Record channel", `${to} receives marker from ${from} and stops recording ${a.ch}: [${r.msgs.join(", ") || "empty"}].`, "record");
         s.line = 4;

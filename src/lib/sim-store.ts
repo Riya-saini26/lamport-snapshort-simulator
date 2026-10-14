@@ -60,7 +60,7 @@ export const useSim = create<Store>((set, get) => ({
   back: () => {
     const h = get().history;
     if (!h.length) return;
-    set({ state: h[h.length - 1], history: h.slice(0, -1), playing: false, error: null });
+    set({ state: h[h.length - 1]!, history: h.slice(0, -1), playing: false, error: null });
   },
   reset: () => {
     const { n, links, initiator } = get();
