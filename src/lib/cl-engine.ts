@@ -133,7 +133,11 @@ export function apply(prev: SimState, a: Action, fromScript = false): SimState {
   const s: SimState = structuredClone(prev);
   s.step++;
   s.lastCh = null;
-  if (fromScript) s.cursor++;
+  if (fromScript) {
+    s.cursor++;
+    const stale = (a.type === "snapshot" && s.started) || (a.type === "deliver" && !s.channels[a.ch]?.length);
+    if (stale) { log(s, "—", "Skip", "Scripted event no longer applies after manual changes; skipped.", "info"); return s; }
+  }
   if (a.type === "send") {
     if (a.from === a.to) throw new Error("A process cannot send to itself.");
     const k = chKey(a.from, a.to);
