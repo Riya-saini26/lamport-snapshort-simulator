@@ -24,12 +24,12 @@ const features = [
 ];
 
 function BgNetwork() {
-  const pts = [[80, 90], [300, 40], [520, 120], [460, 320], [180, 300], [320, 200]];
-  const edges = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 0], [5, 0], [5, 2], [5, 3], [1, 5]];
+  const pts: [number, number][] = [[80, 90], [300, 40], [520, 120], [460, 320], [180, 300], [320, 200]];
+  const edges: [number, number][] = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 0], [5, 0], [5, 2], [5, 3], [1, 5]];
   return (
     <svg viewBox="0 0 600 380" className="pointer-events-none absolute inset-0 h-full w-full opacity-40" preserveAspectRatio="xMidYMid slice">
       {edges.map(([a, b], i) => (
-        <line key={i} x1={pts[a][0]} y1={pts[a][1]} x2={pts[b][0]} y2={pts[b][1]} stroke="var(--primary)" strokeOpacity=".5" strokeDasharray="4 6" className="anim-dash" />
+        <line key={i} x1={pts[a]![0]} y1={pts[a]![1]} x2={pts[b]![0]} y2={pts[b]![1]} stroke="var(--primary)" strokeOpacity=".5" strokeDasharray="4 6" className="anim-dash" />
       ))}
       {pts.map(([x, y], i) => (
         <circle key={i} cx={x} cy={y} r="7" fill="var(--accent)" className="anim-pulse" style={{ animationDelay: `${i * 0.4}s` }} />
